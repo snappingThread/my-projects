@@ -35,6 +35,7 @@
             color: white;
             font-size: 18px;
             text-align: center;
+            pointer-events: none; /* Prevent clicking before visible */
         }
         .overlay a {
             color: white;
@@ -90,6 +91,7 @@
         const audio = document.getElementById('audio');
         const button = document.getElementById('openPandorasBox');
         const overlayContainer = document.querySelector('.overlay-container');
+        const overlays = document.querySelectorAll('.overlay');
 
         // Set canvas size to fill the screen
         canvas.width = window.innerWidth;
@@ -137,6 +139,11 @@
 
             // Fade in the overlay container
             overlayContainer.style.opacity = 1;
+
+            // Enable the links
+            overlays.forEach(overlay => {
+                overlay.style.pointerEvents = 'auto'; // Make links clickable
+            });
         });
     </script>
 </body>
