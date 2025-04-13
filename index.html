@@ -151,6 +151,50 @@
             overlays.forEach(overlay => {
                 overlay.style.pointerEvents = 'auto'; // Make links clickable
             });
+
+            // Start fading audio volume when the audio starts
+            audio.volume = 0; // Start with 0 volume
+            fadeInAudio();
+        });
+
+        // Function to fade in audio (called on start)
+        function fadeInAudio() {
+            let fadeInDuration = 5; // Seconds to fade in
+            let fadeInInterval = 100; // Interval for fade in (in ms)
+            let fadeInStep = 1 / (fadeInDuration * 1000 / fadeInInterval);
+
+            let fadeIn = setInterval(() => {
+                if (audio.volume < 1) {
+                    audio.volume += fadeInStep;
+                } else {
+                    clearInterval(fadeIn);
+                }
+            }, fadeInInterval);
+        }
+
+        // Function to fade out audio (called on audio end)
+        function fadeOutAudio() {
+            let fadeOutDuration = 5; // Seconds to fade out
+            let fadeOutInterval = 100; // Interval for fade out (in ms)
+            let fadeOutStep = 1 / (fadeOutDuration * 1000 / fadeOutInterval);
+
+            let fadeOut = setInterval(() => {
+                if (audio.volume > 0) {
+                    audio.volume -= fadeOutStep;
+                } else {
+                    clearInterval(fadeOut);
+                }
+            }, fadeOutInterval);
+        }
+
+        // Event listener for when the audio ends (loop ends)
+        audio.addEventListener('ended', () => {
+            fadeOutAudio(); // Fade out when the loop ends
+        });
+
+        // Event listener for when the audio starts playing (loop starts)
+        audio.addEventListener('play', () => {
+            fadeInAudio(); // Fade in when the loop starts
         });
     </script>
 </body>
