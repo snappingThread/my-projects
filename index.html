@@ -67,10 +67,8 @@
 <body>
     <canvas id="matrixCanvas"></canvas>
 
-    <audio id="audio" loop>
-        <source src="https://github.com/snappingThread/my-projects/raw/refs/heads/main/Sci%20fi%20Beeping%20Rumbling%20Ambience%2001.mp3" type="audio/mpeg">
-        Your browser does not support the audio element.
-    </audio>
+    <audio id="audioInitial" src="https://github.com/snappingThread/my-projects/raw/refs/heads/main/Sci%20fi%20Beeping%20Rumbling%20Ambience%2001.mp3" type="audio/mpeg"></audio>
+    <audio id="audioStatic" src="https://github.com/snappingThread/my-projects/raw/refs/heads/main/NASA-Spaceship-Ambience-VOL-2-Re.mp3" loop></audio>
 
     <button id="openPandorasBox">Open Pandora's Box?</button>
 
@@ -89,7 +87,8 @@
     <script>
         const canvas = document.getElementById('matrixCanvas');
         const ctx = canvas.getContext('2d');
-        const audio = document.getElementById('audio');
+        const audioInitial = document.getElementById('audioInitial');
+        const audioStatic = document.getElementById('audioStatic');
         const button = document.getElementById('openPandorasBox');
         const overlayContainer = document.querySelector('.overlay-container');
         const overlays = document.querySelectorAll('.overlay');
@@ -132,13 +131,13 @@
 
         // Button click event
         button.addEventListener('click', () => {
-            console.log('Button clicked, playing audio and fading button');
+            console.log('Button clicked, playing initial audio and fading button');
             
-            // Play the audio
-            audio.play().then(() => {
-                console.log('Audio started');
+            // Play the initial audio
+            audioInitial.play().then(() => {
+                console.log('Initial audio started');
             }).catch((err) => {
-                console.error('Error playing audio:', err);
+                console.error('Error playing initial audio:', err);
             });
 
             // Fade out the button
@@ -152,50 +151,36 @@
                 overlay.style.pointerEvents = 'auto'; // Make links clickable
             });
 
-            // Start fading audio volume when the audio starts
-            audio.volume = 0; // Start with 0 volume
-            fadeInAudio();
+            // Event listener to start static sound once initial audio ends
+            audioInitial.addEventListener('ended', () => {
+                console.log('Initial audio ended, starting static sound');
+                fadeInStaticSound(); // Start fading in static sound
+            });
         });
 
-        // Function to fade in audio (called on start)
-        function fadeInAudio() {
+        // Function to fade in static sound
+        function fadeInStaticSound() {
+            audioStatic.play().then(() => {
+                console.log('Static audio started');
+            }).catch((err) => {
+                console.error('Error playing static audio:', err);
+            });
+
+            // Start with 0 volume
+            audioStatic.volume = 0;
+
             let fadeInDuration = 5; // Seconds to fade in
             let fadeInInterval = 100; // Interval for fade in (in ms)
             let fadeInStep = 1 / (fadeInDuration * 1000 / fadeInInterval);
 
             let fadeIn = setInterval(() => {
-                if (audio.volume < 1) {
-                    audio.volume += fadeInStep;
+                if (audioStatic.volume < 1) {
+                    audioStatic.volume += fadeInStep;
                 } else {
                     clearInterval(fadeIn);
                 }
             }, fadeInInterval);
         }
-
-        // Function to fade out audio (called on audio end)
-        function fadeOutAudio() {
-            let fadeOutDuration = 5; // Seconds to fade out
-            let fadeOutInterval = 100; // Interval for fade out (in ms)
-            let fadeOutStep = 1 / (fadeOutDuration * 1000 / fadeOutInterval);
-
-            let fadeOut = setInterval(() => {
-                if (audio.volume > 0) {
-                    audio.volume -= fadeOutStep;
-                } else {
-                    clearInterval(fadeOut);
-                }
-            }, fadeOutInterval);
-        }
-
-        // Event listener for when the audio ends (loop ends)
-        audio.addEventListener('ended', () => {
-            fadeOutAudio(); // Fade out when the loop ends
-        });
-
-        // Event listener for when the audio starts playing (loop starts)
-        audio.addEventListener('play', () => {
-            fadeInAudio(); // Fade in when the loop starts
-        });
     </script>
 </body>
 </html>
