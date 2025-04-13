@@ -27,6 +27,19 @@
             background: rgba(0, 0, 0, 0.7);
             border: 1px solid rgba(255, 255, 255, 0.2);
             border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 18px;
+            text-align: center;
+        }
+        .overlay a {
+            color: white;
+            text-decoration: none;
+        }
+        .overlay a:hover {
+            text-decoration: underline;
         }
     </style>
 </head>
@@ -34,7 +47,9 @@
     <canvas id="matrixCanvas"></canvas>
 
     <div class="overlay-container">
-        <div class="overlay"></div>
+        <div class="overlay">
+            <a href="https://snappingthread.github.io/Weather-app/" target="_blank">Weather Info</a>
+        </div>
         <div class="overlay"></div>
     </div>
 
